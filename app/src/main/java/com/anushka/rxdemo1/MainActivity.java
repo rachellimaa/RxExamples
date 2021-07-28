@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
@@ -19,8 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private String greeting="Hello From RxJava";
 
     private Observable<String> myObservable;
-    private Observer<String> myObserver;
-    private Disposable disposable;
+    private DisposableObserver<String> myObserver;
 
     private TextView textView;
     @Override
@@ -36,18 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         myObservable.observeOn(AndroidSchedulers.mainThread());
 
-        myObserver = new Observer<String>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                Log.i("TAG", "onSubscribe");
-                disposable = d;
-            }
-
+        myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(@NonNull String s) {
                 Log.i("TAG", "onNext");
-
-                textView.setText(s);
+                textView.setText(greeting);
             }
 
             @Override
@@ -69,6 +62,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        disposable.dispose();
+        myObserver.dispose();
     }
 }
