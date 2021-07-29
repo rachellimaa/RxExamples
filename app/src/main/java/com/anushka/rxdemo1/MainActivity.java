@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = "myApp";
     private String[] greeting = {"Hello A", "Hello B", "Hello C"};
 
-    private Observable<String[]> myObservable;
-    private DisposableObserver<String[]> myObserver;
+    private Observable<String> myObservable;
+    private DisposableObserver<String> myObserver;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private TextView textView;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.tvGreeting);
 
         // Or works with strings like this:  "Hello A", "Hello B", "Hello C"
-        myObservable = Observable.just(greeting);
+        myObservable = Observable.fromArray(greeting);
 
         compositeDisposable.add(myObservable
                 .subscribeOn(Schedulers.io())
@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private DisposableObserver getObserver() {
-        myObserver = new DisposableObserver<String[]>() {
+        myObserver = new DisposableObserver<String>() {
             @Override
-            public void onNext(@NonNull String[] s) {
+            public void onNext(@NonNull String s) {
                 Log.i("TAG", "onNext " + s);
             }
 
